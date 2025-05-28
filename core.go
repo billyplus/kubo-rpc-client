@@ -113,8 +113,10 @@ type ListResult struct {
 }
 
 func (api *coreAPI) List(ctx context.Context, hash string, opt ...APIOption) (*ListResult, error) {
-	opt = append(opt, WithArgs(hash))
-	return Request[ListResult](ctx, (*rpc.HttpApi)(api), "ls", opt...)
+	opts := make([]APIOption, len(opt)+1)
+	opts = append(opts, WithArgs(hash))
+	opts = append(opts, opt...)
+	return Request[ListResult](ctx, (*rpc.HttpApi)(api), "ls", opts...)
 }
 
 /*

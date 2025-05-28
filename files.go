@@ -75,8 +75,10 @@ long [bool]: Use long listing format. Required: no.
 U [bool]: Do not sort; list entries in directory order. Required: no.
 */
 func (api *filesAPI) List(ctx context.Context, path string, opt ...APIOption) (*FileListResult, error) {
-	opt = append(opt, WithArgs(path))
-	return Request[FileListResult](ctx, (*rpc.HttpApi)(api), "files/ls", opt...)
+	opts := make([]APIOption, len(opt)+1)
+	opts = append(opts, WithArgs(path))
+	opts = append(opts, opt...)
+	return Request[FileListResult](ctx, (*rpc.HttpApi)(api), "files/ls", opts...)
 }
 
 /*
@@ -86,8 +88,10 @@ arg [string]: Source IPFS or MFS path to copy. Required: yes.
 arg [string]: Destination within MFS. Required: yes.
 */
 func (api *filesAPI) Copy(ctx context.Context, src, dst string, opt ...APIOption) error {
-	opt = append(opt, WithArgs(src), WithArgs(dst))
-	return Exec(ctx, (*rpc.HttpApi)(api), "files/cp", opt...)
+	opts := make([]APIOption, len(opt)+2)
+	opts = append(opts, WithArgs(src), WithArgs(dst))
+	opts = append(opts, opt...)
+	return Exec(ctx, (*rpc.HttpApi)(api), "files/cp", opts...)
 }
 
 /*
@@ -97,6 +101,8 @@ arg [string]: Source file to move. Required: yes.
 arg [string]: Destination path for file to be moved to. Required: yes.
 */
 func (api *filesAPI) Move(ctx context.Context, src, dst string, opt ...APIOption) error {
-	opt = append(opt, WithArgs(src), WithArgs(dst))
-	return Exec(ctx, (*rpc.HttpApi)(api), "files/mv", opt...)
+	opts := make([]APIOption, len(opt)+2)
+	opts = append(opts, WithArgs(src), WithArgs(dst))
+	opts = append(opts, opt...)
+	return Exec(ctx, (*rpc.HttpApi)(api), "files/mv", opts...)
 }
