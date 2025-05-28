@@ -45,7 +45,7 @@ func (api *filesAPI) Stat(ctx context.Context, path string, opt ...APIOption) (*
 	opts := make([]APIOption, 0, len(opt)+1)
 	opts = append(opts, WithArgs(path))
 	opts = append(opts, opt...)
-	return Request[FileStatResult](ctx, (*rpc.HttpApi)(api), "ls", opts...)
+	return Request[FileStatResult](ctx, (*rpc.HttpApi)(api), "files/stat", opts...)
 }
 
 /*
