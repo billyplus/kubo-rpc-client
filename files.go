@@ -42,8 +42,10 @@ type FileStatResult struct {
 }
 
 func (api *filesAPI) Stat(ctx context.Context, path string, opt ...APIOption) (*FileStatResult, error) {
-	opt = append(opt, WithArgs(path))
-	return Request[FileStatResult](ctx, (*rpc.HttpApi)(api), "ls", opt...)
+	opts := make([]APIOption, len(opt)+1)
+	opts = append(opts, WithArgs(path))
+	opts = append(opts, opt...)
+	return Request[FileStatResult](ctx, (*rpc.HttpApi)(api), "ls", opts...)
 }
 
 /*
