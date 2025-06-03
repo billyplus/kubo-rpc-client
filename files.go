@@ -60,13 +60,15 @@ func (api *filesAPI) Stat(ctx context.Context, path string, opt ...APIOption) (*
 	  ]
 	}
 */
+type FileListEntry struct {
+	Hash string `json:"Hash"`
+	Name string `json:"Name"`
+	Size int64  `json:"Size"`
+	Type int    `json:"Type"`
+}
+
 type FileListResult struct {
-	Entries []struct {
-		Hash string `json:"Hash"`
-		Name string `json:"Name"`
-		Size int64  `json:"Size"`
-		Type int    `json:"Type"`
-	} `json:"Entries"`
+	Entries []FileListEntry `json:"Entries"`
 }
 
 /*

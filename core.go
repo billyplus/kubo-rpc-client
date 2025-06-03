@@ -97,23 +97,27 @@ func (api *coreAPI) Add(ctx context.Context, f files.Node, opts ...caopts.Unixfs
 		]
 	}
 */
+type ListEntry struct {
+	Hash    string `json:"Hash"`
+	ModTime string `json:"ModTime"`
+	Mode    uint32 `json:"Mode"`
+	Name    string `json:"Name"`
+	Size    uint64 `json:"Size"`
+	Target  string `json:"Target"`
+	Type    int32  `json:"Type"`
+}
+
+type ListObjectData struct {
+	Hash  string      `json:"Hash"`
+	Links []ListEntry `json:"Links"`
+}
+
 type ListResult struct {
-	Objects []struct {
-		Hash  string `json:"Hash"`
-		Links []struct {
-			Hash    string `json:"Hash"`
-			ModTime string `json:"ModTime"`
-			Mode    uint32 `json:"Mode"`
-			Name    string `json:"Name"`
-			Size    uint64 `json:"Size"`
-			Target  string `json:"Target"`
-			Type    int32  `json:"Type"`
-		} `json:"Links"`
-	} `json:"Objects"`
+	Objects []ListObjectData `json:"Objects"`
 }
 
 func (api *coreAPI) List(ctx context.Context, hash string, opt ...APIOption) (*ListResult, error) {
-	opts := make([]APIOption,0, len(opt)+1)
+	opts := make([]APIOption, 0, len(opt)+1)
 	opts = append(opts, WithArgs(hash))
 	opts = append(opts, opt...)
 	return Request[ListResult](ctx, (*rpc.HttpApi)(api), "ls", opts...)
