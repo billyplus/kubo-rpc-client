@@ -78,6 +78,33 @@ func (api *coreAPI) Add(ctx context.Context, f files.Node, opts ...caopts.Unixfs
 }
 
 /*
+	/api/v0/cat
+
+Show IPFS object data.
+
+# Arguments
+
+- `arg` [string]: The path to the IPFS object(s) to be outputted. Required: **yes**.
+- `offset` [int64]: Byte offset to begin reading from. Required: no.
+- `length` [int64]: Maximum number of bytes to read. Required: no.
+- `progress` [bool]: Stream progress data. Default: `true`. Required: no.
+
+# Response
+
+On success, the call to this endpoint will return with 200 and the following body:
+
+```json
+This endpoint returns a `text/plain` response body.
+```
+*/
+func (api *coreAPI) Cat(ctx context.Context, path string, opts ...caopts.UnixfsAddOption) ([]byte, error) {
+	opt := make([]APIOption, 0, len(opts)+1)
+	opt = append(opt, WithArgs(path))
+	opt = append(opt, opt...)
+	return RequestRaw(ctx, (*rpc.HttpApi)(api), "cat", opt...)
+}
+
+/*
 	{
 		"Objects": [
 		{

@@ -59,6 +59,28 @@ func Request[R any](ctx context.Context, ipfsAPI *rpc.HttpApi, cmd string, opt .
 	return &out, nil
 }
 
+func RequestRaw(ctx context.Context, ipfsAPI *rpc.HttpApi, cmd string, opt ...APIOption) ([]byte, error) {
+	o := Option{
+		opts: map[string]any{},
+	}
+	for _, oo := range opt {
+		oo(&o)
+	}
+
+	req := ipfsAPI.Request(cmd, o.args...)
+	for k, v := range o.opts {
+		req = req.Option(k, v)
+	}
+
+	res, err := req.Send(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Output.Close()
+
+	return io.ReadAll(res.Output)
+}
+
 func Exec(ctx context.Context, ipfsAPI *rpc.HttpApi, cmd string, opt ...APIOption) error {
 	o := Option{
 		opts: map[string]any{},
