@@ -110,3 +110,18 @@ func (api *filesAPI) Move(ctx context.Context, src, dst string, opt ...APIOption
 	opts = append(opts, opt...)
 	return Exec(ctx, (*rpc.HttpApi)(api), "files/mv", opts...)
 }
+
+/*
+/api/v0/files/rm
+Remove a file from MFS.
+Arguments
+arg [string]: File to remove. Required: yes.
+recursive [bool]: Recursively remove directories. Required: no.
+force [bool]: Forcibly remove target at path; implies -r for directories. Required: no.
+*/
+func (api *filesAPI) Remove(ctx context.Context, path string, opt ...APIOption) error {
+	opts := make([]APIOption, 0, len(opt)+1)
+	opts = append(opts, WithArgs(path))
+	opts = append(opts, opt...)
+	return Exec(ctx, (*rpc.HttpApi)(api), "files/rm", opts...)
+}
