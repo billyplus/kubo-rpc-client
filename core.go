@@ -97,10 +97,10 @@ On success, the call to this endpoint will return with 200 and the following bod
 This endpoint returns a `text/plain` response body.
 ```
 */
-func (api *coreAPI) Cat(ctx context.Context, path string, opts ...caopts.UnixfsAddOption) ([]byte, error) {
+func (api *coreAPI) Cat(ctx context.Context, path string, opts ...APIOption) ([]byte, error) {
 	opt := make([]APIOption, 0, len(opts)+1)
 	opt = append(opt, WithArgs(path))
-	opt = append(opt, opt...)
+	opt = append(opt, opts...)
 	return RequestRaw(ctx, (*rpc.HttpApi)(api), "cat", opt...)
 }
 
